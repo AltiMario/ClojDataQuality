@@ -53,3 +53,13 @@
     (str/split-lines (slurp path-file))
     (catch Exception x
       (log/error "ERROR loading data file:" (.getMessage x)))))
+
+
+(defn frequencies-stats
+  "For a nice result display"
+  [frequencies-map]
+  (with-out-str
+    (clojure.pprint/print-table
+      (map (fn [[t c]] {:host t :count c})
+           (sort-by second >
+                    frequencies-map)))))

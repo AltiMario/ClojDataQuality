@@ -103,6 +103,16 @@
         (log/error "ERROR in transaction_id " (:transaction_id item) "=>" (.getMessage e))))))
 
 
+(defn popular-booking-site
+  "return a ordered list of the most popular booking site"
+  [json-file]
+  (try
+    (let [items (json/parsed-seq (clojure.java.io/reader json-file) true)]
+      (frequencies (map #(:host (:entry_url %)) items)))
+    (catch Exception e
+      (log/error (.getMessage e)))))
+
+
 (defn mapping-file
   "generates a map structure from the csv data"
   [input-file]
@@ -115,9 +125,10 @@
   (try
     (io/delete-file output-file true)
     (process-rows (mapping-file input-file) (clojure.java.io/writer output-file))
+    (println (ut/frequencies-stats (popular-booking-site output-file)))
     (catch Exception e
       (log/error (.getMessage e)))))
 
 (comment
-  (-main "resources/fake-sample-data.csv" "out.json")
+  (-main "resources/test-data.csv" "out.json")
   )
