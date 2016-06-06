@@ -4,10 +4,11 @@
             [clojure.instant :refer [read-instant-date]]
             [clojure.tools.logging :as log]
             [clojure.string :as str]
-            [digest :refer :all])
-  (:require [data-quality.validation :as v]
-            [data-quality.util :as ut]
+            [digest :refer :all]
+            [cheshire.core :as json]
             [clojure.java.io :as io])
+  (:require [data-quality.validation :as v]
+            [data-quality.util :as ut])
   (:gen-class))
 
 
@@ -93,11 +94,11 @@
 
 
 (defn process-rows
-  "validate the csv, apply the enrichment and generate the output file"
+  "validate the csv, apply the enrichment and generate the output JSON file"
   [rows-mapped output-file]
   (doseq [item rows-mapped]
     (try
-      (ut/append-file output-file (enrich (s/validate row-schema item)))
+      (json/generate-stream (enrich (s/validate row-schema item)) output-file)
       (catch Exception e
         (log/error "ERROR in transaction_id " (:transaction_id item) "=>" (.getMessage e))))))
 
@@ -111,8 +112,12 @@
 
 (defn -main
   [input-file output-file]
-  (io/delete-file output-file true)
-  (process-rows (mapping-file input-file) output-file))
+  (try
+    (io/delete-file output-file true)
+    (process-rows (mapping-file input-file) (clojure.java.io/writer output-file))
+    (catch Exception e
+      (log/error (.getMessage e)))))
+
 (comment
-  (-main "data.csv" "out.json")
+  (-main "resources/fake-sample-data.csv" "out.json")
   )

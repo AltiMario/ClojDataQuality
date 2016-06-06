@@ -3,11 +3,12 @@
             [clojure.tools.logging :as log]
             [clojure.string :as str]
             [clj-time.core :as t]
-            [clj-time.format :as ft]))
+            [clj-time.format :as ft]
+            [cheshire.core :as json]))
 
 
 (defn day-interval
-  "calulates the interval between 2 dates and return -1 in case of error or invalid day number"
+  "calculates the interval between 2 dates and return -1 in case of error or invalid day number"
   [booking-date stay-date]
   (try
     (let [custom-formatter (ft/formatter "d/M/yyyy")
@@ -38,9 +39,11 @@
   "return the JSON with the info about the postcode"
   [postcode]
   (try
-    (slurp (str "http://api.postcodes.io/postcodes/" (str/trim postcode)))
+    (json/parse-string (slurp (str "http://api.postcodes.io/postcodes/" (str/trim postcode))))
     (catch Exception x
       (log/error "ERROR" (.getMessage x)))))
+(comment
+  (def postcode "WS5  3QB"))
 
 
 (defn from-csv-to-rows
@@ -50,11 +53,3 @@
     (str/split-lines (slurp path-file))
     (catch Exception x
       (log/error "ERROR loading data file:" (.getMessage x)))))
-
-(defn append-file
-  "append a string to a file"
-  [file-name str]
-  (try
-    (spit file-name str :append true)
-    (catch Exception x
-      (log/error "ERROR" (.getMessage x)))))

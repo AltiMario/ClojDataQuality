@@ -11,7 +11,7 @@
 
 (def postcode-regex #"(?i)[a-z]{1,2}[0-9][0-9a-z]?\s+?[0-9][a-z]{2}")
 
-(def chipscode-regex #"(?i)[a-z0-9]{4,6}")
+(def chipscode-regex #"(?i)[a-z0-9]{4,6}")  ;;TODO: verify the chipscode format
 
 (def date-regex #"(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)[0-9][0-9])")
 
