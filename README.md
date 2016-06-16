@@ -1,5 +1,5 @@
-# Data-Quality ver 0.1 #
-A simple tool to apply validation and enrichment from a CSV
+# Cloj-Data-Quality ver 0.1 #
+A simple Clojure tool to apply validation and enrichment from a CSV input to a JSON output
 
 ## Technical Requirements
 
