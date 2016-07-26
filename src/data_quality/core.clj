@@ -29,7 +29,7 @@
 
 
 (s/defschema row-schema
-  "validation schema to apply to the data"
+  "validation schema to apply to the data "
   {:email                 (matches v/email-regex)
    :title                 (matches v/title-regex)
    :firstname             s/Str
