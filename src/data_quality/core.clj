@@ -104,7 +104,7 @@
 
 
 (defn popular-booking-site
-  "return a ordered list of the most popular booking site"
+  "return a ordered list of the most popular booking sites"
   [json-file]
   (try
     (let [items (json/parsed-seq (clojure.java.io/reader json-file) true)]
